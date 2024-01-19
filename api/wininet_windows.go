@@ -2,15 +2,14 @@ package api
 
 import (
 	"strings"
+	"syscall"
 	"unsafe"
 
-	"golang.org/x/sys/windows"
-
-	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/errors"
 	"github.com/mjwhitta/win/types"
 )
 
-var wininet *windows.LazyDLL = windows.NewLazySystemDLL("Wininet")
+var wininet *syscall.LazyDLL = syscall.NewLazyDLL("Wininet")
 
 // HTTPAddRequestHeadersW is from wininet.h
 func HTTPAddRequestHeadersW(
@@ -119,7 +118,7 @@ func HTTPQueryInfoW(
 		return errors.Newf("%s: %w", proc, e)
 	}
 
-	tmp = windows.UTF16ToString(b)
+	tmp = syscall.UTF16ToString(b)
 	*buffer = []byte(tmp)
 
 	return nil

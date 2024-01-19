@@ -11,8 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mjwhitta/errors"
-	"github.com/mjwhitta/pathname"
+	"github.com/mjwhitta/win/errors"
 )
 
 type cacheEntry struct {
@@ -440,10 +439,10 @@ func main() {
 
 		arg = "/usr/x86_64-w64-mingw32/include/" + arg
 
-		if ok, e := pathname.DoesExist(arg); e != nil {
-			fmt.Println(e.Error())
+		if _, err := os.Stat(arg); err != nil {
+			fmt.Println(err.Error())
 			os.Exit(1)
-		} else if !ok {
+		} else if os.IsNotExist(err) {
 			fmt.Printf("file %s not found\n", arg)
 			os.Exit(1)
 		}
@@ -525,7 +524,7 @@ func processFileDefines(fp string) error {
 	var fn string = filepath.Base(fp)
 	var tmp string
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
+	if f, e = os.Open(fp); e != nil {
 		return errors.Newf("failed to open %s: %w", fp, e)
 	}
 	defer f.Close()
@@ -559,7 +558,7 @@ func processFileSkips(fp string) error {
 	var fn string = filepath.Base(fp)
 	var inStructOrTypedef bool
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
+	if f, e = os.Open(fp); e != nil {
 		return errors.Newf("failed to open %s: %w", fp, e)
 	}
 	defer f.Close()
@@ -625,7 +624,7 @@ func processFileTypedefs(fp string) error {
 	var tmp string
 	var inTypedef bool
 
-	if f, e = os.Open(pathname.ExpandPath(fp)); e != nil {
+	if f, e = os.Open(fp); e != nil {
 		return errors.Newf("failed to open %s: %w", fp, e)
 	}
 	defer f.Close()

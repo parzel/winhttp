@@ -5,7 +5,7 @@ package winhttp
 import (
 	"time"
 
-	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/errors"
 )
 
 // Client is an empty struct, if not Windows.

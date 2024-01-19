@@ -1,6 +1,6 @@
 package winhttp
 
-import "github.com/mjwhitta/errors"
+import "github.com/mjwhitta/win/errors"
 
 // DefaultClient is the default client similar to net/http.
 var DefaultClient *Client

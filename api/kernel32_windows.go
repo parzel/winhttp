@@ -1,12 +1,12 @@
 package api
 
 import (
-	"golang.org/x/sys/windows"
+	"syscall"
 
 	"github.com/mjwhitta/win/types"
 )
 
-var kernel32 *windows.LazyDLL = windows.NewLazySystemDLL("kernel32")
+var kernel32 *syscall.LazyDLL = syscall.NewLazyDLL("kernel32")
 
 // OutputDebugStringW will print a string that Dbgview.exe and
 // dbgview64.exe will display. Useful for debugging DLLs.

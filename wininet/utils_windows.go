@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mjwhitta/errors"
 	w32 "github.com/mjwhitta/win/api"
+	"github.com/mjwhitta/win/errors"
 )
 
 func buildRequest(sessionHndl uintptr, r *Request) (uintptr, error) {

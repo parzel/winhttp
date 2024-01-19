@@ -2,11 +2,10 @@ package api
 
 import (
 	"fmt"
+	"syscall"
 	"unsafe"
 
-	"golang.org/x/sys/windows"
-
-	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/errors"
 )
 
 type clientID struct {
@@ -23,11 +22,11 @@ type objectAttrs struct {
 	SecurityQualityOfService uintptr
 }
 
-var ntdll *windows.LazyDLL = windows.NewLazySystemDLL("ntdll")
+var ntdll *syscall.LazyDLL = syscall.NewLazyDLL("ntdll")
 
 // NtAllocateVirtualMemory from ntdll.
 func NtAllocateVirtualMemory(
-	pHndl windows.Handle,
+	pHndl syscall.Handle,
 	size uint64,
 	allocType uintptr,
 	protection uintptr,
@@ -60,7 +59,7 @@ func NtAllocateVirtualMemory(
 
 // NtCreateSection from ntdll.
 func NtCreateSection(
-	sHndl *windows.Handle,
+	sHndl *syscall.Handle,
 	access uintptr,
 	size uint64,
 	pagePerms uintptr,
@@ -89,8 +88,8 @@ func NtCreateSection(
 
 // NtMapViewOfSection from ntdll.
 func NtMapViewOfSection(
-	sHndl windows.Handle,
-	pHndl windows.Handle,
+	sHndl syscall.Handle,
+	pHndl syscall.Handle,
 	size uint64,
 	inheritPerms uintptr,
 	pagePerms uintptr,
@@ -125,9 +124,9 @@ func NtMapViewOfSection(
 func NtOpenProcess(
 	pid uint32,
 	access uintptr,
-) (windows.Handle, error) {
+) (syscall.Handle, error) {
 	var err uintptr
-	var pHndl windows.Handle
+	var pHndl syscall.Handle
 	var proc string = "NtOpenProcess"
 
 	err, _, _ = ntdll.NewProc(proc).Call(
@@ -147,7 +146,7 @@ func NtOpenProcess(
 
 // NtQueueApcThread from ntdll.
 func NtQueueApcThread(
-	tHndl windows.Handle,
+	tHndl syscall.Handle,
 	apcRoutine uintptr,
 ) error {
 	var err uintptr
@@ -169,7 +168,7 @@ func NtQueueApcThread(
 
 // NtQueueApcThreadEx from ntdll.
 func NtQueueApcThreadEx(
-	tHndl windows.Handle,
+	tHndl syscall.Handle,
 	apcRoutine uintptr,
 ) error {
 	var err uintptr
@@ -191,7 +190,7 @@ func NtQueueApcThreadEx(
 }
 
 // NtResumeThread from ntdll.
-func NtResumeThread(tHndl windows.Handle) error {
+func NtResumeThread(tHndl syscall.Handle) error {
 	var err uintptr
 	var proc string = "NtResumeThread"
 
@@ -208,7 +207,7 @@ func NtResumeThread(tHndl windows.Handle) error {
 
 // NtWriteVirtualMemory from ntdll.
 func NtWriteVirtualMemory(
-	pHndl windows.Handle,
+	pHndl syscall.Handle,
 	dst uintptr,
 	b []byte,
 ) error {
@@ -230,14 +229,14 @@ func NtWriteVirtualMemory(
 
 // RtlCreateUserThread from ntdll.
 func RtlCreateUserThread(
-	pHndl windows.Handle,
+	pHndl syscall.Handle,
 	addr uintptr,
 	sspnd bool,
-) (windows.Handle, error) {
+) (syscall.Handle, error) {
 	var err uintptr
 	var proc string = "RtlCreateUserThread"
 	var suspend uintptr
-	var tHndl windows.Handle
+	var tHndl syscall.Handle
 
 	if sspnd {
 		suspend = 1

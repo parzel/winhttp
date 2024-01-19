@@ -2,15 +2,14 @@ package api
 
 import (
 	"strings"
+	"syscall"
 	"unsafe"
 
-	"golang.org/x/sys/windows"
-
-	"github.com/mjwhitta/errors"
+	"github.com/mjwhitta/win/errors"
 	"github.com/mjwhitta/win/types"
 )
 
-var winhttp *windows.LazyDLL = windows.NewLazySystemDLL("Winhttp")
+var winhttp *syscall.LazyDLL = syscall.NewLazyDLL("Winhttp")
 
 // WinHTTPAddRequestHeaders is WinHttpAddRequestHeaders from winhttp.h
 func WinHTTPAddRequestHeaders(
@@ -192,7 +191,7 @@ func WinHTTPQueryHeaders(
 		return errors.Newf("%s: %w", proc, e)
 	}
 
-	*buffer = []byte(windows.UTF16ToString(b))
+	*buffer = []byte(syscall.UTF16ToString(b))
 
 	return nil
 }

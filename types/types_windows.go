@@ -1,16 +1,15 @@
 package types
 
 import (
+	"syscall"
 	"unsafe"
-
-	"golang.org/x/sys/windows"
 )
 
 // Cwstr converts a Go string to a Windows wide string.
 func Cwstr(str string) *uint16 {
 	var tmp *uint16
 
-	tmp, _ = windows.UTF16PtrFromString(str)
+	tmp, _ = syscall.UTF16PtrFromString(str)
 	return tmp
 }
 

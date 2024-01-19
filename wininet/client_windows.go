@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"time"
 
-	"github.com/mjwhitta/errors"
 	w32 "github.com/mjwhitta/win/api"
+	"github.com/mjwhitta/win/errors"
 )
 
 // Client is a struct containing relevant metadata to make HTTP
