@@ -20,13 +20,13 @@ type Client struct {
 
 // NewClient will return a pointer to a new Client instance that
 // simply wraps the net/http.Client type.
-func NewClient() (*Client, error) {
+func NewClient(userAgent string) (*Client, error) {
 	var c = &Client{}
 	var e error
 
 	// Create session
 	c.hndl, e = w32.WinHTTPOpen(
-		"Go-http-client/1.1", // TODO make this configurable
+		userAgent,
 		w32.Winhttp.WinhttpAccessTypeAutomaticProxy,
 		"",
 		"",
