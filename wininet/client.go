@@ -20,11 +20,12 @@ type Client struct {
 
 // NewClient will return a pointer to a new Client instance that
 // simply wraps the net/http.Client type.
-func NewClient(userAgent string) (*Client, error) {
+func NewClient(userAgent string, proxyname string) (*Client, error) {
 	var c = &Client{}
 	var e error
 
-	// Create session
+	// Create session with automatic proxy or no proxy
+	if proxyname == "" {
 	c.hndl, e = w32.InternetOpenW(
 		userAgent,
 		w32.Wininet.InternetOpenTypePreconfig,
@@ -32,6 +33,16 @@ func NewClient(userAgent string) (*Client, error) {
 		"",
 		0,
 	)
+	} else {
+		// Proxy is provided, use it
+		c.hndl, e = w32.InternetOpenW(
+			userAgent,
+			w32.Wininet.InternetOpenTypeProxy,
+			proxyname,
+			"",
+			0,
+		)
+	}
 	if e != nil {
 		return nil, errors.Newf("failed to create session: %w", e)
 	}

@@ -20,20 +20,29 @@ type Client struct {
 
 // NewClient will return a pointer to a new Client instance that
 // simply wraps the net/http.Client type.
-func NewClient(userAgent string) (*Client, error) {
+func NewClient(userAgent string, proxyname string) (*Client, error) {
 	var c = &Client{}
 	var e error
 
-	// Create session
-	c.hndl, e = w32.WinHTTPOpen(
-		userAgent,
-		w32.Winhttp.WinhttpAccessTypeAutomaticProxy,
-		"",
-		"",
-		0,
-	)
-	if e != nil {
-		return nil, errors.Newf("failed to create session: %w", e)
+	// Create session with automatic proxy or no proxy
+	if proxyname == "" {
+		// No proxy given, use automatic proxy
+		c.hndl, e = w32.WinHTTPOpen(
+			userAgent,
+			w32.Winhttp.WinhttpAccessTypeAutomaticProxy,
+			"",
+			"",
+			0,
+		)
+	} else {
+		// Proxy is provided, use it
+		c.hndl, e = w32.WinHTTPOpen(
+			userAgent,
+			w32.Winhttp.WinhttpAccessTypeNamedProxy,
+			LpCwstr(proxyname),
+			"",
+			0,
+		)
 	}
 
 	return c, nil

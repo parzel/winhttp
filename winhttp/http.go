@@ -33,7 +33,7 @@ func Head(url string) (*Response, error) {
 }
 
 func init() {
-	DefaultClient, _ = NewClient("Go-http-client/1.1")
+	DefaultClient, _ = NewClient("Go-http-client/1.1", "")
 }
 
 // Post will make a POST request using the DefaultClient.
